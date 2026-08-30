@@ -2,3 +2,12 @@
 .ruff_cache
 docs/superpowers/*
 .worktrees/
+
+# Artefatos locais do manuscrito do TCC (docx, figuras, geradores)
+docs/TCC*.docx
+docs/TCC-rascunho-capitulos.md
+docs/gerar_tcc*.py
+docs/preencher_modelo_tcc.py
+docs/capturar_prints.py
+docs/tcc-figuras/
+docs/__pycache__/
