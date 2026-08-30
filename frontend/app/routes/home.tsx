@@ -17,7 +17,7 @@ import {
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
