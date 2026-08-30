@@ -1,9 +1,9 @@
 from unittest.mock import MagicMock, patch
-from fastapi.testclient import TestClient
+from fastapi import Response
 
 from app.core.cache import cache_delete, cache_get, cache_set, distributed_lock
 from app.core.redis import check_redis_health
-from app.main import app
+from app.main import deep_healthcheck
 
 
 def test_redis_health_fallback():
@@ -30,12 +30,10 @@ def test_distributed_lock_fallback():
 
 
 def test_deep_healthcheck_endpoint():
-    """Verify GET /health returns structured response with components."""
-    client = TestClient(app)
-    response = client.get("/health")
-    # Health endpoint can return 200 (or 503 if real DB is not running in local test runner)
+    """Verify deep_healthcheck returns structured response with components."""
+    response = Response()
+    data = deep_healthcheck(response=response)
     assert response.status_code in (200, 503)
-    data = response.json()
     assert "status" in data
     assert "components" in data
     assert "database" in data["components"]
