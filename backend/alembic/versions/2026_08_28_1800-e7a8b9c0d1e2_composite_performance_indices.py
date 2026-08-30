@@ -37,22 +37,22 @@ def upgrade() -> None:
         unique=False
     )
     op.create_index(
-        'idx_audit_logs_entity_created',
-        'audit_logs',
-        ['entity_type', 'entity_id', 'created_at'],
+        'idx_audit_records_entity_target_performed',
+        'audit_records',
+        ['entity_type', 'target_id', 'performed_at'],
         unique=False
     )
     op.create_index(
         'idx_notifications_user_read',
         'notifications',
-        ['user_id', 'is_read', 'created_at'],
+        ['user_id', 'read', 'created_at'],
         unique=False
     )
 
 
 def downgrade() -> None:
     op.drop_index('idx_notifications_user_read', table_name='notifications')
-    op.drop_index('idx_audit_logs_entity_created', table_name='audit_logs')
+    op.drop_index('idx_audit_records_entity_target_performed', table_name='audit_records')
     op.drop_index('idx_calendar_blocks_env_dates', table_name='calendar_blocks')
     op.drop_index('idx_reservations_requester_status', table_name='reservations')
     op.drop_index('idx_reservations_env_dates_status', table_name='reservations')
