@@ -1,6 +1,6 @@
 SHELL := bash
 
-LOCAL_DB_URL := postgresql://postgres:postgres@localhost:5432/app
+LOCAL_DB_URL := postgresql://postgres:postgres@localhost:5433/app
 
 .PHONY: install migrate migrate-container run run-backend run-frontend help
 

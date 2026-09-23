@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 from fastapi import Response
 
 from app.core.cache import cache_delete, cache_get, cache_set, distributed_lock

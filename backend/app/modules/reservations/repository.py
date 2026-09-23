@@ -118,6 +118,40 @@ class ReservationRepository:
             query = query.where(Reservation.id != exclude_id)
         return list(self.db.execute(query).scalars().unique().all())
 
+    def get_inactive_or_missing_resource_ids(
+        self, *, resource_ids: list[int]
+    ) -> list[int]:
+        if not resource_ids:
+            return []
+        from app.modules.resources.models import Resource
+
+        found_ids = set(
+            self.db.execute(
+                select(Resource.id)
+                .where(Resource.id.in_(resource_ids))
+                .where(Resource.active.is_(True))
+            )
+            .scalars()
+            .all()
+        )
+        return sorted(set(resource_ids) - found_ids)
+
+    def get_resource_unavailability_overlapping(
+        self, *, resource_ids: list[int], start: datetime, end: datetime
+    ) -> list[tuple[int, str | None]]:
+        if not resource_ids:
+            return []
+        from app.modules.resources.models import ResourceAvailability
+
+        query = (
+            select(ResourceAvailability.resource_id, ResourceAvailability.reason)
+            .where(ResourceAvailability.resource_id.in_(resource_ids))
+            .where(ResourceAvailability.available.is_(False))
+            .where(ResourceAvailability.start < end)
+            .where(ResourceAvailability.end > start)
+        )
+        return list(self.db.execute(query).all())
+
     def get_calendar_blocks_overlapping(
         self,
         *,

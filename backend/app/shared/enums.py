@@ -138,6 +138,11 @@ class SupportType(StrEnum):
     CLEANING = "CLEANING"
 
 
+class RecommendationStrategy(StrEnum):
+    FIRST_FIT = "FIRST_FIT"
+    WEIGHTED_SCORE = "WEIGHTED_SCORE"
+
+
 class CheckinMethod(StrEnum):
     MANUAL = "MANUAL"
     QR_CODE = "QR_CODE"

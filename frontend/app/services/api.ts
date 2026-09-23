@@ -82,10 +82,18 @@ export type RoomCriticality = EnvironmentCriticality;
 
 export type ResourceAttachment = "FIXED" | "MOBILE";
 
+export type ResourceType =
+  | "EQUIPMENT"
+  | "FURNITURE"
+  | "SOFTWARE_LICENSE"
+  | "KEY"
+  | "SUPPLY"
+  | "KIT";
+
 export interface Resource {
   id: number;
   name: string;
-  type: string;
+  type: ResourceType;
   category: string;
   attachment_type: ResourceAttachment;
   environment_id: number | null;
@@ -1820,6 +1828,50 @@ export interface AvailabilityResponse {
   conflicts: { type: string; detail: string }[];
   suggestions: { start_time: string; end_time: string }[];
 }
+
+export type RecommendationStrategy = "FIRST_FIT" | "WEIGHTED_SCORE";
+
+export interface RecommendationCriteria {
+  start_time: string;
+  end_time: string;
+  participant_count: number;
+  environment_types?: EnvironmentType[];
+  location_id?: number;
+  required_resource_types?: ResourceType[];
+  support_types?: SupportType[];
+  strategy?: RecommendationStrategy;
+  limit?: number;
+}
+
+export interface RecommendedResource {
+  id: number;
+  name: string;
+  type: ResourceType;
+}
+
+export interface EnvironmentRecommendation {
+  environment: Room;
+  resources: RecommendedResource[];
+  support_types: SupportType[];
+  strategy: RecommendationStrategy;
+  score: number;
+  reasons: string[];
+}
+
+export interface RecommendationResponse {
+  recommendations: EnvironmentRecommendation[];
+  message: string | null;
+}
+
+export const recommendationApi = {
+  async find(criteria: RecommendationCriteria): Promise<RecommendationResponse> {
+    return apiFetch<RecommendationResponse>(
+      "recomendacoes/ambientes",
+      { method: "POST", body: JSON.stringify(criteria) },
+      "Falha ao buscar recomendações"
+    );
+  },
+};
 
 export const reservationAvailabilityApi = {
   async check(params: {

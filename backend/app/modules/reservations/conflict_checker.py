@@ -56,6 +56,7 @@ def check_reservation(
     required_support: list[SupportType] | None = None,
     exclude_id: int | None = None,
     now: datetime | None = None,
+    lock_conflicts: bool = True,
 ) -> ConflictReport:
     report = ConflictReport()
 
@@ -82,7 +83,7 @@ def check_reservation(
         start=start,
         end=end,
         exclude_id=exclude_id,
-        with_for_update=True,
+        with_for_update=lock_conflicts,
     )
     for clash in overlapping:
         report.add(
@@ -92,6 +93,15 @@ def check_reservation(
         )
 
     if resource_ids:
+        invalid_resource_ids = repository.get_inactive_or_missing_resource_ids(
+            resource_ids=resource_ids
+        )
+        for resource_id in invalid_resource_ids:
+            report.add(
+                "RESOURCE",
+                f"Recurso #{resource_id} não está ativo ou não existe",
+            )
+
         resource_clashes = repository.get_resource_overlapping(
             resource_ids=resource_ids,
             start=start,
@@ -118,6 +128,15 @@ def check_reservation(
                 f"Recurso #{m.resource_id} em manutenção de "
                 f"{m.start_date:%d/%m/%Y %H:%M} a {m.end_date:%H:%M}",
             )
+
+        unavailable_periods = repository.get_resource_unavailability_overlapping(
+            resource_ids=resource_ids, start=start, end=end
+        )
+        for resource_id, reason in unavailable_periods:
+            detail = f"Recurso #{resource_id} indisponível no período solicitado"
+            if reason:
+                detail = f"{detail}: {reason}"
+            report.add("RESOURCE", detail)
 
     required_qual_ids = [r.qualification_id for r in environment.requirements]
     if required_qual_ids:

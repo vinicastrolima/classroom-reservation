@@ -35,6 +35,7 @@ import { CompositeManageDialog } from "./reservations/CompositeManageDialog";
 import { IncidentDialog } from "./reservations/IncidentDialog";
 import { ReservationCard } from "./reservations/ReservationCard";
 import { ReservationFormDialog } from "./reservations/ReservationFormDialog";
+import { RecommendationDialog } from "./reservations/RecommendationDialog";
 
 export default function ReservationsPage() {
   const navigate = useNavigate();
@@ -53,6 +54,7 @@ export default function ReservationsPage() {
   const [successMessage, setSuccessMessage] = useState("");
 
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isRecommendationOpen, setIsRecommendationOpen] = useState(false);
   const [editingReservation, setEditingReservation] = useState<Reservation | null>(null);
 
   const [cancelTarget, setCancelTarget] = useState<Reservation | null>(null);
@@ -216,6 +218,14 @@ export default function ReservationsPage() {
           <Button
             variant="outlined"
             startIcon={<AddIcon />}
+            onClick={() => setIsRecommendationOpen(true)}
+            disabled={!currentUser}
+          >
+            Encontrar ambiente
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<AddIcon />}
             onClick={() => setCompositeOpen(true)}
             disabled={!currentUser}
           >
@@ -351,6 +361,22 @@ export default function ReservationsPage() {
               prev.map((r) => (r.id === updated.id ? updated : r))
             );
             setSuccessMessage("Reserva atualizada");
+          }}
+          onError={handleError}
+        />
+      )}
+
+      {currentUser && (
+        <RecommendationDialog
+          open={isRecommendationOpen}
+          selectedDate={selectedDate}
+          resources={resources}
+          users={users}
+          currentUser={currentUser}
+          onClose={() => setIsRecommendationOpen(false)}
+          onCreated={(created) => {
+            setReservations((previous) => [...previous, created]);
+            setSuccessMessage("Solicitação de reserva enviada");
           }}
           onError={handleError}
         />

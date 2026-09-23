@@ -7,7 +7,7 @@ FROM python:3.14-slim AS builder
 WORKDIR /build
 
 ENV UV_LINK_MODE=copy \
-    UV_PROJECT_ENVIRONMENT=/app/.venv
+    UV_PROJECT_ENVIRONMENT=/opt/venv
 
 COPY --from=ghcr.io/astral-sh/uv:0.7.2 /uv /uvx /usr/local/bin/
 
@@ -29,12 +29,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN groupadd -g 10001 appgroup && \
     useradd -u 10001 -g appgroup -s /bin/sh -m appuser
 
-ENV PATH="/app/.venv/bin:$PATH" \
+ENV PATH="/opt/venv/bin:$PATH" \
     PYTHONPATH=/app \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
-COPY --from=builder /app/.venv /app/.venv
+COPY --from=builder /opt/venv /opt/venv
 COPY . /app
 
 RUN chmod +x /app/start.sh && \

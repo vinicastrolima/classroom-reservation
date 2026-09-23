@@ -1,6 +1,9 @@
-# Welcome to React Router!
+# Frontend — Classroom Reservation
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Frontend da prova de conceito acadêmica, construído com React Router. O build de
+produção é útil para validar a compilação, mas não representa certificação de
+prontidão operacional. Consulte os
+[critérios de aceite da POC](../docs/ESCOPO-POC.md).
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
 
@@ -34,7 +37,7 @@ npm run dev
 
 Your application will be available at `http://localhost:5173`.
 
-## Building for Production
+## Gerando o build
 
 Create a production build:
 
@@ -66,7 +69,8 @@ The containerized application can be deployed to any platform that supports Dock
 
 ### DIY Deployment
 
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
+O servidor gerado é adequado para demonstração da POC. Uma implantação real exige
+os controles de hardening documentados no escopo do projeto.
 
 Make sure to deploy the output of `npm run build`
 

@@ -2,6 +2,11 @@
 
 Sistema de reserva de salas e ambientes acadêmicos.
 
+> **Fase do projeto:** prova de conceito acadêmica para desenvolvimento local e
+> demonstração. Os critérios de aceite e os controles deliberadamente adiados para
+> uma eventual produção estão documentados em
+> [Escopo e critérios de aceite da POC](docs/ESCOPO-POC.md).
+
 ## Tecnologias
 
 | Camada | Stack |
@@ -55,7 +60,7 @@ Na primeira execução, o Docker fará o build das imagens e instalará as depen
 | Frontend | http://localhost:3000 |
 | Backend (API) | http://localhost:8000 |
 | Documentação da API (Swagger) | http://localhost:8000/docs |
-| Banco de dados (PostgreSQL) | `localhost:5432` |
+| Banco de dados (PostgreSQL) | `localhost:5433` |
 
 Para rodar em background:
 
@@ -92,7 +97,7 @@ uv run uvicorn app.main:app --reload
 Configure a variável de ambiente antes de subir:
 
 ```bash
-export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/app
+export DATABASE_URL=postgresql://postgres:postgres@localhost:5433/app
 ```
 
 Outros comandos úteis:

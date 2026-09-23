@@ -6,14 +6,15 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: app
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5433}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d app"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 12
+      start_period: 60s
     networks:
       - app-network
 
@@ -36,6 +37,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    user: "${UID:-1000}:${GID:-1000}"
     ports:
       - "8000:8000"
     environment:
@@ -43,7 +45,9 @@ services:
       REDIS_URL: redis://redis:6379/0
       ENVIRONMENT: development
       LOG_LEVEL: INFO
-    command: /app/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: >-
+      /bin/sh -c "/opt/venv/bin/alembic upgrade head &&
+      exec /opt/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     volumes:
       - ./backend:/app
     depends_on:
@@ -64,8 +68,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-      - "24678:24678"
+      - "3000:80"
     environment:
       VITE_API_URL: http://localhost:8000/api/v1
     volumes:

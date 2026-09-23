@@ -22,7 +22,7 @@ def _local_time(dt: datetime) -> time:
     return dt.time()
 
 
-def _assert_operating_hours(start: datetime, end: datetime) -> None:
+def assert_operating_hours(start: datetime, end: datetime) -> None:
     """Levanta ValueError se start ou end estiver fora de 07:00–22:00 BRT."""
     if _local_time(start) < _OPEN:
         raise ValueError(
@@ -32,6 +32,11 @@ def _assert_operating_hours(start: datetime, end: datetime) -> None:
         raise ValueError(
             "O término da reserva deve ser até as 22:00 (horário de Brasília)"
         )
+
+
+def _assert_operating_hours(start: datetime, end: datetime) -> None:
+    """Compatibilidade interna para os schemas de reserva existentes."""
+    assert_operating_hours(start, end)
 
 
 class ReservationResourceCreate(BaseModel):

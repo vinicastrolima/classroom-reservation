@@ -7,6 +7,15 @@ context: |
   Projeto: Classroom & Laboratory Reservation System (TCC)
   Repositório: classroom-reservation (tcc)
   Linguagem de Documentação e UI: Português (pt-BR)
+  Maturidade: prova de conceito (POC), destinada a desenvolvimento local e demonstração acadêmica; não presume prontidão para produção
+
+  Política de aceite da POC:
+  - Preservar invariantes funcionais, autorização, privacidade e integridade dos dados
+  - Validar o escopo alterado com testes e análise estática proporcionais ao risco
+  - Não bloquear uma mudança por débito preexistente e não relacionado fora dos arquivos alterados
+  - Tratar carga, benchmark, SLO, rollout, rollback operacional, banco populado e homologação completa como hardening de produção, salvo solicitação explícita
+  - Registrar verificações adiadas com transparência; nunca descrevê-las como executadas
+  - Não introduzir `Any`, seja `typing.Any` em Python ou `any` explícito em TypeScript
   
   Stack Tecnológica:
   - Backend: Python 3.14+, FastAPI, SQLAlchemy 2.0, Alembic, Pydantic v2, PostgreSQL 16
@@ -37,14 +46,19 @@ rules:
   proposal:
     - "Descreva o problema, contexto e impacto de negócio em pt-BR"
     - "Inclua explicitamente seções de Escopo, Não-Escopo e Impacto Arquitetural"
+    - "Declare se o nível de aceite é POC ou produção; por padrão, este projeto usa aceite POC"
   design:
     - "Documente decisões arquiteturais (ADRs), contratos de interface e modelos de dados"
     - "Use diagramas para fluxos e estados"
+    - "Separe garantias funcionais da POC de hardening e garantias operacionais de produção"
   specs:
     - "Estruture sempre com Purpose e Requirements"
     - "Use Requirement com SHALL / MUST e cenários GIVEN / WHEN / THEN"
+    - "Requisitos de produção existentes não são gates automáticos para mudanças POC não relacionadas"
   tasks:
     - "Separe tarefas em seções de BACKEND, FRONTEND e VERIFICAÇÃO"
+    - "Classifique validações como gate da POC ou hardening de produção; itens de hardening não bloqueiam por padrão"
+    - "Ao dispensar um gate de produção, registre a decisão de escopo sem afirmar que a validação foi executada"
 
 # Orientações operacionais
 operations:
@@ -53,8 +67,12 @@ operations:
       - Seguir estritamente o padrão 4-camadas no backend e o design system no frontend
       - Manter todos os textos de interface e mensagens em pt-BR
       - Garantir que enums sejam atualizados em shared/enums.py antes de gerar migrações
-      - Executar testes e checagem de tipos (ruff, tsc, vitest, pytest)
+      - Não introduzir Any em Python ou TypeScript
+      - Executar testes e análise estática do escopo alterado; preferir também as suítes completas quando estiverem saudáveis
+      - Não bloquear o aceite POC por falhas preexistentes e não relacionadas, desde que sejam identificadas e registradas
+      - Adiar carga, benchmark, EXPLAIN ANALYZE, concorrência em infraestrutura real, migração em banco populado, rollout e homologação completa, salvo exigência explícita da mudança
   archive:
     guidance:
       - Sincronizar as especificações centrais em openspec/specs/ antes de arquivar
       - Resumir o resultado da implementação e impactos no sistema
+      - Permitir arquivamento de POC com hardening de produção adiado, desde que o adiamento e as verificações realmente executadas estejam documentados

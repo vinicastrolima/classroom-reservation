@@ -27,6 +27,7 @@ from app.modules.organizational_units.router import (
     router as organizational_units_router,
 )
 from app.modules.qualifications.router import router as qualifications_router
+from app.modules.recommendations.router import router as recommendations_router
 from app.modules.reservations.router import router as reservations_router
 from app.modules.resources.availability_router import router as resource_availability_router
 from app.modules.resources.maintenance_router import router as resource_maintenance_router
@@ -145,6 +146,7 @@ app.include_router(users_router)
 app.include_router(auth_router)
 app.include_router(organizational_units_router)
 app.include_router(reservations_router)
+app.include_router(recommendations_router)
 app.include_router(qualifications_router)
 app.include_router(notifications_router)
 app.include_router(operations_router)
